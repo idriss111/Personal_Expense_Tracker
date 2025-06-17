@@ -1,0 +1,136 @@
+﻿@model Personal_Expense_Tracker.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Welcome";
+}
+
+<header class="bg-white shadow">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <div>
+            <h2 class="text-2xl font-bold">
+                Welcome, @Model.Welcome.FirstName @Model.Welcome.LastName!
+            </h2>
+            <p class="text-sm text-gray-600">
+                @Model.Welcome.Profession &middot; Salary: @Model.Welcome.SalaryRange
+            </p>
+        </div>
+        <form asp-controller="Home" asp-action="Logout" method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="text-red-600 hover:text-red-800">Logout</button>
+        </form>
+    </div>
+</header>
+
+<section class="container mx-auto px-6 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-semibold text-gray-800">Your Expenses</h3>
+        <button data-modal-target="expenseModal"
+                data-modal-toggle="expenseModal"
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+            Add Expense
+        </button>
+    </div>
+
+    <div class="overflow-x-auto bg-white rounded-lg shadow">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                    <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Amount (€)</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-100">
+                @if (Model.ExistingExpenses.Any())
+                {
+                    foreach (var exp in Model.ExistingExpenses)
+                    {
+                        <tr>
+                            <td class="px-4 py-2">@exp.Date:yyyy-MM-dd</td>
+                            <td class="px-4 py-2">@exp.Category</td>
+                            <td class="px-4 py-2 text-right">€@exp.Amount</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" class="px-4 py-6 text-center text-gray-500">
+                            You haven’t added any expenses yet.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<div id="expenseModal"
+     class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg w-full max-w-md p-6 shadow-lg">
+        <div class="flex justify-between items-center mb-4">
+            <h4 class="text-lg font-semibold text-gray-800">Add New Expense</h4>
+            <button data-modal-toggle="expenseModal"
+                    class="text-gray-400 hover:text-gray-600">
+                &times;
+            </button>
+        </div>
+        <form asp-controller="Home" asp-action="CreateExpense" method="post" class="space-y-4">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="All" class="text-red-600 text-sm"></div>
+
+            <div>
+                <label asp-for="NewExpense.Date" class="block text-sm font-medium text-gray-700">Date</label>
+                <input asp-for="NewExpense.Date" type="date"
+                       class="mt-1 block w-full border-b-2 border-gray-300 focus:outline-none" />
+                <span asp-validation-for="NewExpense.Date" class="text-red-600 text-sm"></span>
+            </div>
+
+            <div>
+                <label asp-for="NewExpense.Category" class="block text-sm font-medium text-gray-700">Category</label>
+                <select asp-for="NewExpense.Category"
+                        class="mt-1 block w-full border-b-2 border-gray-300 focus:outline-none">
+                    <option value="">Select…</option>
+                    <option>Grocery</option>
+                    <option>Travel</option>
+                    <option>Shopping</option>
+                    <option>Utilities</option>
+                </select>
+                <span asp-validation-for="NewExpense.Category" class="text-red-600 text-sm"></span>
+            </div>
+
+            <div>
+                <label asp-for="NewExpense.Amount" class="block text-sm font-medium text-gray-700">Amount (€)</label>
+                <input asp-for="NewExpense.Amount" type="number" step="0.01"
+                       class="mt-1 block w-full border-b-2 border-gray-300 focus:outline-none" />
+                <span asp-validation-for="NewExpense.Amount" class="text-red-600 text-sm"></span>
+            </div>
+
+            <div class="flex justify-end">
+                <button type="button"
+                        data-modal-toggle="expenseModal"
+                        class="mr-2 px-4 py-2 text-gray-600 hover:text-gray-800">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                    Save
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document
+          .querySelectorAll('[data-modal-toggle]')
+          .forEach(btn =>
+            btn.addEventListener('click', () => {
+              const target = btn.getAttribute('data-modal-target');
+              document.getElementById(target).classList.toggle('hidden');
+            })
+          );
+    </script>
+}

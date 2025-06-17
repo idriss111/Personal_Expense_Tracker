@@ -1,0 +1,97 @@
+﻿@model Personal_Expense_Tracker.Models.RegisterModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container w-screen h-screen mx-auto overflow-hidden bg-gray-100 shadow-lg md:flex md:h-full">
+    <!-- Left “promo” panel -->
+    <div class="grid w-full grid-cols-3">
+        <div class="h-full col-span-1 p-6 bg-bottom bg-cover"
+             style="background-image:url('https://images.unsplash.com/photo-1505740420928-5e560c06d30e?...');">
+            <h2 class="pt-2 font-serif text-5xl font-bold text-black">ExpenseTrack</h2>
+            <p class="text-gray-800">Manage your money effortlessly</p>
+        </div>
+
+        <!-- FORM PANEL -->
+        <div class="flex items-center justify-center w-full col-span-2">
+            <form asp-action="Register" method="post" class="max-w-xl p-4 mx-auto mt-4 space-y-6">
+                <h3 class="mb-8 text-5xl font-bold text-center">Register</h3>
+
+                <!-- First / Last Name -->
+                <div class="flex flex-wrap -mx-3">
+                    <div class="w-full px-3 mb-6 md:w-1/2">
+                        <label asp-for="FirstName"
+                               class="block mb-2 text-xs font-bold text-gray-700 uppercase">First Name</label>
+                        <input asp-for="FirstName"
+                               class="block w-full px-4 py-3 text-gray-700 border-b-2 border-gray-500 rounded hover:shadow-xl focus:outline-none"
+                               required />
+                        <span asp-validation-for="FirstName" class="text-red-600"></span>
+                    </div>
+                    <div class="w-full px-3 md:w-1/2">
+                        <label asp-for="LastName"
+                               class="block mb-2 text-xs font-bold text-gray-700 uppercase">Last Name</label>
+                        <input asp-for="LastName"
+                               class="block w-full px-4 py-3 text-gray-700 border-b-2 border-gray-500 rounded hover:shadow-xl focus:outline-none"
+                               required />
+                        <span asp-validation-for="LastName" class="text-red-600"></span>
+                    </div>
+                </div>
+
+                <!-- Profession -->
+                <div>
+                    <label asp-for="Profession"
+                           class="block mb-2 text-xs font-bold text-gray-700 uppercase">Profession</label>
+                    <input asp-for="Profession"
+                           class="block w-full px-4 py-3 text-gray-700 border-b-2 border-gray-500 rounded hover:shadow-xl focus:outline-none"
+                           placeholder="e.g. Software Engineer" />
+                </div>
+
+                <!-- Salary Range -->
+                <div>
+                    <label asp-for="SalaryRange"
+                           class="block mb-2 text-xs font-bold text-gray-700 uppercase">Yearly Salary Range</label>
+                    <select asp-for="SalaryRange"
+                            class="block w-full px-4 py-3 text-gray-700 border-b-2 border-gray-500 rounded focus:outline-none">
+                        <option value="">— Select range —</option>
+                        <option>0–10 k €</option>
+                        <option>10–20 k €</option>
+                        <option>20–45 k €</option>
+                        <option>45–70 k €</option>
+                        <option>70–150 k €</option>
+                        <option>> 150 k €</option>
+                    </select>
+                </div>
+
+                
+                <div>
+                    <label asp-for="Password"
+                           class="block mb-2 text-xs font-bold text-gray-700 uppercase">Password</label>
+                    <input asp-for="Password" type="password"
+                           class="block w-full px-4 py-3 text-gray-700 border-b-2 border-gray-500 rounded focus:outline-none"
+                           required />
+                    <span asp-validation-for="Password" class="text-red-600"></span>
+                </div>
+
+               
+                <div class="flex justify-center">
+                    <button type="submit"
+                            class="px-8 py-2 font-bold text-white rounded-full shadow-lg bg-black hover:bg-gray-800">
+                        Register & Get Started
+                    </button>
+                </div>
+
+                <div asp-validation-summary="All" class="text-red-600 text-center"></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@if (Model.RegistrationSuccess)
+{
+    <script>
+        alert('Registration complete! 🎉');
+    </script>
+}
+
+
