@@ -1,0 +1,29 @@
+﻿name: CI/CD for Personal Expense Tracker (Razor)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore ./Personal_Expense_Tracker/Personal_Expense_Tracker.csproj
+
+    - name: Build the project
+      run: dotnet build --no-restore ./Personal_Expense_Tracker/Personal_Expense_Tracker.csproj
+
+    - name: Test (optional)
+      run: echo "No test project yet"

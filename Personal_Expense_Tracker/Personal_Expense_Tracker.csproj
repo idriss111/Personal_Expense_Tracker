@@ -15,4 +15,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.16" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include=".github\workflows\ci-cd.yml" />
+  </ItemGroup>
+
 </Project>
