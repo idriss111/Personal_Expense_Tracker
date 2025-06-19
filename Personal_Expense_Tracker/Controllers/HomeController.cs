@@ -179,6 +179,35 @@ namespace Personal_Expense_Tracker.Controllers
             return RedirectToAction("Welcome");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteExpense(int id)
+        {
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (!int.TryParse(userIdStr, out int userId))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var expense = await _db.Expenses
+                .Where(e => e.Id == id && e.UserId == userId)
+                .FirstOrDefaultAsync();
+
+            if (expense == null)
+            {
+                _logger.LogWarning("Delete attempt failed: Expense not found or doesn't belong to user.");
+                return RedirectToAction("Welcome"); // or show error
+            }
+
+            _db.Expenses.Remove(expense);
+            await _db.SaveChangesAsync();
+
+            _logger.LogInformation("Deleted Expense Id={Id} for UserId={UserId}", expense.Id, userId);
+
+            return RedirectToAction("Welcome");
+        }
+
+
         [HttpGet]
         public IActionResult Login()
         {
@@ -230,9 +259,9 @@ namespace Personal_Expense_Tracker.Controllers
         }
 
 
-            
-        [HttpGet]
-         public IActionResult Logout()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Logout()
         {
             HttpContext.Session.Clear();
             return RedirectToAction("Index");
